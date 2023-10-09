@@ -1,0 +1,110 @@
+//Created by CTT VNPAY
+
+extends layout
+
+block content
+    h3=title
+        //- p  product name: #{productname1}
+        //- p  made in: #{madein1}
+        //- p  price: #{price1}
+        //- p  sl: #{sl1}
+    div.form#product(action='create_payment_url', method='GET')
+        div#productname(data-productname="shoe",style="font-weight:bold;") Product name: shoe
+        //- label(for='productname') Product name: shoe
+        //- input.form-control(id='productname' name='productname', placeholder='Số productname', value='shoe', style='display:none;')
+        //- br
+        div#madein(data-madein="china",style="font-weight:bold;") Made in: china
+        //- label(for='madein') Made in: china
+        //- input.form-control(id='madein' name='madein', placeholder='madein', value='china', style='display:none;')
+        //- br
+        div#price(data-price="10000",style="font-weight:bold;") Price: 10000
+        //- label(for='price') Price: 10000
+        //- input.form-control(id='price' name='price', placeholder='price', value='10000', style='display:none;')
+        //- br
+        div.input-group(style="display:flex;flex-direction:row")
+            p(style="margin-top:5px;font-weight:bold;") Amount: 
+            div.input-group-append(style="display:flex;flex-direction:row")
+                button.btn.btn-outline-secondary(type='button', onclick='decreaseAmount()') -
+                input.form-control#sl(type='number', name='sl', value='1', oninput='updateAmount()', min='1', max='20' style='width:60px;')
+                button.btn.btn-outline-secondary(type='button', onclick='increaseAmount()') +
+
+
+    div.table-responsive
+        form#createOrder(action='create_payment_url', method='POST')
+            div.form-group
+                label#total(style="margin-top:10px;font-size:40px") Total : 10000
+                input.form-control#amount(name='amount', placeholder='Số tiền', value=amount style="display: none;")
+
+            div.form-group
+                label Chọn Phương thức thanh toán:
+                label.control-label
+                div.controls
+                label.radio-inline
+                #[input(type="radio", name="bankCode", id="defaultPaymentMethod", value="", checked="true")] Cổng thanh toán VNPAYQR
+                div.controls
+                label.radio-inline
+                #[input(type="radio", name="bankCode", id="vnpayqrPaymentMethod", value="VNPAYQR")] Thanh toán qua ứng dụng hỗ trợ VNPAYQR
+                div.controls
+                label.radio-inline
+                #[input(type="radio", name="bankCode", id="vnbankPaymentMethod", value="VNBANK")] Thanh toán qua ATM-Tài khoản ngân hàng nội địa
+                div.controls
+                label.radio-inline
+                #[input(type="radio", name="bankCode", id="intcardPaymentMethod", value="INTCARD")] Thanh toán qua thẻ quốc tế
+            div.form-group
+                label Ngôn ngữ
+                label.control-label
+                div.controls
+                label.radio-inline
+                #[input(type="radio", name="language", id="vnLanguage", value="vn", checked="true")] Tiếng việt
+                div.controls
+                label.radio-inline
+                #[input(type="radio", name="language", id="enLanguage", value="en")] Tiếng anh
+            button.btn.btn-default#btnPopup(type='submit') Thanh toán
+    p&nbsp;
+
+            script.
+                function decreaseAmount() {
+                    var input = document.getElementById('sl');
+                    var currentValue = parseInt(input.value, 10);
+                    if (currentValue > 1) {
+                        input.value = currentValue - 1;
+                        updateAmount();
+                    }
+                }
+                function increaseAmount() {
+                    var input = document.getElementById('sl');
+                    var currentValue = parseInt(input.value, 10);
+                    if (currentValue < 20) {
+                        input.value = currentValue + 1;
+                        updateAmount();
+                    }
+                }
+                function updateAmount() {
+                    const productname = document.getElementById('productname').dataset.productname;
+                    const madein = document.getElementById('madein').dataset.madein;
+                    const price = document.getElementById('price').dataset.price;
+                    localStorage.setItem("productname", productname);
+                    localStorage.setItem("madein", madein);
+                    localStorage.setItem("price", price);
+
+                    var sl = document.getElementsByName('sl')[0].value;
+                    var quatity  = sl * 10000;
+                    document.getElementById('amount').value = quatity;
+                    document.getElementById('total').textContent ='Total : ' + quatity;
+                    localStorage.setItem("sl", sl);  
+                }
+                function submitForm() {
+                    
+                    const form = document.getElementById('myForm');
+                    const slInput = document.getElementById('sl');
+                    const amountInput = document.getElementById('amount');
+               
+                    
+                    // Set the value of the amount input field
+                    amountInput.value = slInput.value * parseInt('10000');
+                    
+                    // Submit the form to both URLs
+                    form.action = 'create_payment_url';
+                    form.submit();
+                
+                }

@@ -1,0 +1,38 @@
+//
+   Created by vinhnt on 6/16/2017.
+
+extends layout
+
+block content
+    if code == "00"
+        p(style="text-align: center;font-size:30px") GD thành công
+        p Amount: #{tradeInfo.vnp_Amount/100}
+        p Bank Code: #{tradeInfo.vnp_BankCode}
+        p  Bank Transaction Number: #{tradeInfo.vnp_BankTranNo}
+        p  Card Type: #{tradeInfo.vnp_CardType}
+        p  OrderInfo: #{tradeInfo.vnp_OrderInfo}
+        p  Pay Date: #{tradeInfo.vnp_PayDate}
+        p  vnp_TxnRef: #{tradeInfo.vnp_TxnRef}
+        p  TransactionNo: #{tradeInfo.vnp_TransactionNo}
+        p#productname
+        p#madein       
+        p#price       
+        p#sl
+
+  
+    else
+        p(style="text-align: center; color: red") GD thất bại
+    p(style="text-align: center")
+        a.btn.btn-default(href='/order') Về danh sách
+
+    script.
+        const productname = localStorage.getItem("productname");
+        const madein = localStorage.getItem("madein");
+        const price = localStorage.getItem("price");
+        const sl = localStorage.getItem("sl");
+
+        document.getElementById('productname').textContent = 'Product name: ' + productname;
+        document.getElementById('madein').textContent = 'Made in: ' + madein;
+        document.getElementById('price').textContent = 'Price: ' + price;
+        document.getElementById('sl').textContent = 'SL: ' + sl;
+
